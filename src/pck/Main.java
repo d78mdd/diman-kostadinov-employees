@@ -37,6 +37,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/*
+task sample output seems incorrect
+
+the only common project between employee 143 and employee 218 is project 10
+but
+employee 143 left the project in 2011
+employee 218 joined it later - in 2012
+
+output should be empty
+ */
 public class Main {
 
     private static final String COMMA_DELIMITER = ",";
@@ -47,7 +57,14 @@ public class Main {
 
         List<Employee> employeeList = mapRecordsToEmployees(records);
 
-        System.out.println(employeeList.toString());
+
+
+
+
+        List<Pair> employeePairs = getEmployeePairs(employeeList);
+
+        List<Pair> coincidingEmployeePairs = getCoincisingEmployeePairs(employeePairs);
+
 
 
     }
@@ -61,6 +78,7 @@ public class Main {
             employeeList.add(mapRecordToEmployee(record));
         }
 
+        System.out.println(employeeList.toString());
         return employeeList;
     }
 
@@ -103,6 +121,7 @@ public class Main {
             }
         }
 
+        System.out.println();
         return records;
     }
 
