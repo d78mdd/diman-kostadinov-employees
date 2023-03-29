@@ -60,10 +60,17 @@ public class Main {
 
         List<Pair> employeePairs = getEmployeePairsOnByProject(employeeList);
 
-//        List<Pair> coincidingEmployeePairs = getCoincisingEmployeePairs(employeePairs);
+        List<Pair> coincidingEmployeePairs = getCoincidingEmployeePairs(employeePairs);
 
 
     }
+
+    private static List<Pair> getCoincidingEmployeePairs(List<Pair> employeePairs) {
+        List<Pair> pairs = new ArrayList<>();
+
+        return pairs;
+    }
+
 
     private static List<Pair> getEmployeePairsOnByProject(List<Employee> employees) {
         List<Pair> pairs = new ArrayList<>();
