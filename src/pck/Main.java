@@ -71,13 +71,13 @@ public class Main {
 
         employee.setEmpId(Integer.parseInt(record.get(0)));
         employee.setProjectId(Integer.parseInt(record.get(1)));
-        employee.setDateFrom(parseDate(record.get(2)));
-        employee.setDateTo(parseDate(record.get(3)));
+        employee.setDateFrom(LocalDate.parse(record.get(2)));
+        employee.setDateTo(parseDateTo(record.get(3)));
 
         return employee;
     }
 
-    private static LocalDate parseDate(String dateTo) {
+    private static LocalDate parseDateTo(String dateTo) {
 
         if ( dateTo == null || dateTo.equals("NULL")) {
             return LocalDate.now();
