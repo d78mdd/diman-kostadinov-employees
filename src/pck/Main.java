@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.time.temporal.ChronoUnit.MONTHS;
+
 /*
 task sample output seems incorrect
 
@@ -58,21 +60,120 @@ public class Main {
         List<Employee> employeeList = mapRecordsToEmployees(records);
 
 
-        List<Pair> employeePairs = getEmployeePairsOnByProject(employeeList);
+        List<Pair> employeePairs = getEmployeePairsByProject(employeeList);
 
         List<Pair> coincidingEmployeePairs = getCoincidingEmployeePairs(employeePairs);
+        getCoincidingEmployeePairs2(employeePairs);
 
 
+    }
+
+    private static List<Pair> getCoincidingEmployeePairs2(List<Pair> pairs){
+
+        for (int i = 0; i < pairs.size(); i++) {
+
+            Employee emp1 = getEarlierEmployee(pairs.get(i));
+            Employee emp2 = getLaterEmployee(pairs.get(i));
+
+            if (emp2.getDateFrom().compareTo(emp1.getDateTo()) >= 0 ) {
+                // do nothing - they don't coincide
+            } else {
+                // they coincide
+
+                if (emp2.getDateTo().compareTo(emp1.getDateTo()) >= 0) {   // emp2 ended after emp1 ended
+
+                    pairs.get(i).setPeriodInMonths(getPeriod2(emp2.getDateFrom(), emp1.getDateTo()));
+
+                } else {    // emp2 ended before emp1 ended
+
+                    pairs.get(i).setPeriodInMonths(getPeriod2(emp2.getDateFrom(), emp2.getDateTo()));
+                }
+
+//                pair.setPeriodInMonths(getPeriod(pair));
+            }
+
+        }
+
+
+        return new ArrayList<>();
+    }
+
+    private static long getPeriod2(LocalDate date1, LocalDate date2) {
+
+        return date1.until(date2, MONTHS);
+    }
+
+
+    private static Employee getEarlierEmployee(Pair pair) {
+        LocalDate emp1DateFrom = pair.getEmployee1().getDateFrom();
+        LocalDate emp2DateFrom = pair.getEmployee2().getDateFrom();
+        if (emp1DateFrom.compareTo(emp2DateFrom) < 0 )
+        {
+            return pair.getEmployee1();
+        } else {
+            return pair.getEmployee2();
+        }
+    }
+
+    private static Employee getLaterEmployee(Pair pair) {
+        LocalDate emp1DateFrom = pair.getEmployee1().getDateFrom();
+        LocalDate emp2DateFrom = pair.getEmployee2().getDateFrom();
+        if (emp1DateFrom.compareTo(emp2DateFrom) >= 0 )
+        {
+            return pair.getEmployee1();
+        } else {
+            return pair.getEmployee2();
+        }
     }
 
     private static List<Pair> getCoincidingEmployeePairs(List<Pair> employeePairs) {
         List<Pair> pairs = new ArrayList<>();
 
+        for (int i = 0; i < employeePairs.size(); i++) {
+            Pair pair = employeePairs.get(i);
+
+            Employee emp1 = pair.getEmployee1();
+            Employee emp2 = pair.getEmployee2();
+
+            if (emp2StartedAfterEmp1To(emp1, emp2)) {
+                // do nothing
+
+            } else if (emp2StartedAtEmp1To(emp1, emp2)) {
+                pair.setPeriodInMonths(1);
+
+            } else if (emp2StartedBeforeEmp1To(emp1, emp2)) {
+                pair.setPeriodInMonths(getPeriod(pair));
+            }
+        }
+
         return pairs;
     }
 
+    private static int getPeriod(Pair pair) {
 
-    private static List<Pair> getEmployeePairsOnByProject(List<Employee> employees) {
+        pair.getEmployee1().getDateTo().until(pair.getEmployee2().getDateTo(), MONTHS);
+
+        return 0;
+    }
+
+    private static boolean emp2StartedBeforeEmp1To(Employee emp1, Employee emp2) {
+        return compareToWithFrom(emp1, emp2) > 0;
+    }
+
+    private static boolean emp2StartedAtEmp1To(Employee emp1, Employee emp2) {
+        return compareToWithFrom(emp1, emp2) == 0;
+    }
+
+    private static boolean emp2StartedAfterEmp1To(Employee emp1, Employee emp2) {
+        return compareToWithFrom(emp1, emp2) < 0;
+    }
+
+    private static int compareToWithFrom(Employee emp1, Employee emp2) {
+        return emp1.getDateTo().compareTo(emp2.getDateFrom());
+    }
+
+
+    private static List<Pair> getEmployeePairsByProject(List<Employee> employees) {
         List<Pair> pairs = new ArrayList<>();
 
         for (int i = 0; i < employees.size() - 1; i++) {
