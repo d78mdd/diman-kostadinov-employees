@@ -62,23 +62,35 @@ public class Main {
 
         List<Pair> employeePairs = getEmployeePairsByProject(employeeList);
 
-        List<Pair> coincidingEmployeePairs = getCoincidingEmployeePairs(employeePairs);
-        getCoincidingEmployeePairs2(employeePairs);
+        List<Pair> coincidingPairs = getCoincidingEmployeePairs2(employeePairs);
+
+        output(coincidingPairs);
 
 
     }
 
-    private static List<Pair> getCoincidingEmployeePairs2(List<Pair> pairs){
+    private static void output(List<Pair> pairs) {
+        for (Pair pair : pairs) {
+            System.out.println(pair.getEmployee1().getEmpId()
+                    + ", " + pair.getEmployee2().getEmpId()
+                    + ", " + pair.getPeriodInMonths());
+        }
+    }
+
+    private static List<Pair> getCoincidingEmployeePairs2(List<Pair> pairs) {
+        List<Pair> coincidingPairs = new ArrayList<>();
 
         for (int i = 0; i < pairs.size(); i++) {
 
             Employee emp1 = getEarlierEmployee(pairs.get(i));
             Employee emp2 = getLaterEmployee(pairs.get(i));
 
-            if (emp2.getDateFrom().compareTo(emp1.getDateTo()) >= 0 ) {
+            if (emp2.getDateFrom().compareTo(emp1.getDateTo()) >= 0) {
                 // do nothing - they don't coincide
+
             } else {
                 // they coincide
+                coincidingPairs.add(pairs.get(i));
 
                 if (emp2.getDateTo().compareTo(emp1.getDateTo()) >= 0) {   // emp2 ended after emp1 ended
 
@@ -89,13 +101,12 @@ public class Main {
                     pairs.get(i).setPeriodInMonths(getPeriod2(emp2.getDateFrom(), emp2.getDateTo()));
                 }
 
-//                pair.setPeriodInMonths(getPeriod(pair));
             }
 
         }
 
 
-        return new ArrayList<>();
+        return coincidingPairs;
     }
 
     private static long getPeriod2(LocalDate date1, LocalDate date2) {
@@ -107,8 +118,7 @@ public class Main {
     private static Employee getEarlierEmployee(Pair pair) {
         LocalDate emp1DateFrom = pair.getEmployee1().getDateFrom();
         LocalDate emp2DateFrom = pair.getEmployee2().getDateFrom();
-        if (emp1DateFrom.compareTo(emp2DateFrom) < 0 )
-        {
+        if (emp1DateFrom.compareTo(emp2DateFrom) < 0) {
             return pair.getEmployee1();
         } else {
             return pair.getEmployee2();
@@ -118,58 +128,11 @@ public class Main {
     private static Employee getLaterEmployee(Pair pair) {
         LocalDate emp1DateFrom = pair.getEmployee1().getDateFrom();
         LocalDate emp2DateFrom = pair.getEmployee2().getDateFrom();
-        if (emp1DateFrom.compareTo(emp2DateFrom) >= 0 )
-        {
+        if (emp1DateFrom.compareTo(emp2DateFrom) >= 0) {
             return pair.getEmployee1();
         } else {
             return pair.getEmployee2();
         }
-    }
-
-    private static List<Pair> getCoincidingEmployeePairs(List<Pair> employeePairs) {
-        List<Pair> pairs = new ArrayList<>();
-
-        for (int i = 0; i < employeePairs.size(); i++) {
-            Pair pair = employeePairs.get(i);
-
-            Employee emp1 = pair.getEmployee1();
-            Employee emp2 = pair.getEmployee2();
-
-            if (emp2StartedAfterEmp1To(emp1, emp2)) {
-                // do nothing
-
-            } else if (emp2StartedAtEmp1To(emp1, emp2)) {
-                pair.setPeriodInMonths(1);
-
-            } else if (emp2StartedBeforeEmp1To(emp1, emp2)) {
-                pair.setPeriodInMonths(getPeriod(pair));
-            }
-        }
-
-        return pairs;
-    }
-
-    private static int getPeriod(Pair pair) {
-
-        pair.getEmployee1().getDateTo().until(pair.getEmployee2().getDateTo(), MONTHS);
-
-        return 0;
-    }
-
-    private static boolean emp2StartedBeforeEmp1To(Employee emp1, Employee emp2) {
-        return compareToWithFrom(emp1, emp2) > 0;
-    }
-
-    private static boolean emp2StartedAtEmp1To(Employee emp1, Employee emp2) {
-        return compareToWithFrom(emp1, emp2) == 0;
-    }
-
-    private static boolean emp2StartedAfterEmp1To(Employee emp1, Employee emp2) {
-        return compareToWithFrom(emp1, emp2) < 0;
-    }
-
-    private static int compareToWithFrom(Employee emp1, Employee emp2) {
-        return emp1.getDateTo().compareTo(emp2.getDateFrom());
     }
 
 
@@ -189,7 +152,7 @@ public class Main {
 
         }
 
-        System.out.println(pairs);
+//        System.out.println(pairs);
         return pairs;
     }
 
@@ -202,7 +165,7 @@ public class Main {
             employeeList.add(mapRecordToEmployee(record));
         }
 
-        System.out.println(employeeList.toString());
+//        System.out.println(employeeList.toString());
         return employeeList;
     }
 
@@ -241,11 +204,11 @@ public class Main {
 
                 records.add(Arrays.asList(values));
 
-                System.out.println(Arrays.toString(values));
+//                System.out.println(Arrays.toString(values));
             }
         }
 
-        System.out.println();
+//        System.out.println();
         return records;
     }
 
