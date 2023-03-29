@@ -58,15 +58,31 @@ public class Main {
         List<Employee> employeeList = mapRecordsToEmployees(records);
 
 
+        List<Pair> employeePairs = getEmployeePairsOnByProject(employeeList);
+
+//        List<Pair> coincidingEmployeePairs = getCoincisingEmployeePairs(employeePairs);
 
 
+    }
 
-        List<Pair> employeePairs = getEmployeePairs(employeeList);
+    private static List<Pair> getEmployeePairsOnByProject(List<Employee> employees) {
+        List<Pair> pairs = new ArrayList<>();
 
-        List<Pair> coincidingEmployeePairs = getCoincisingEmployeePairs(employeePairs);
+        for (int i = 0; i < employees.size() - 1; i++) {
+            Employee emp1 = employees.get(i);
 
+            for (int j = i + 1; j < employees.size(); j++) {
+                Employee emp2 = employees.get(j);
 
+                if (emp1.getProjectId() == emp2.getProjectId()) {
+                    pairs.add(new Pair(emp1, emp2));
+                }
+            }
 
+        }
+
+        System.out.println(pairs);
+        return pairs;
     }
 
 
@@ -97,7 +113,7 @@ public class Main {
 
     private static LocalDate parseDateTo(String dateTo) {
 
-        if ( dateTo == null || dateTo.equals("NULL")) {
+        if (dateTo == null || dateTo.equals("NULL")) {
             return LocalDate.now();
         } else {
             return LocalDate.parse(dateTo);
