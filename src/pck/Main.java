@@ -26,16 +26,33 @@ public class Main {
 
         List<Pair> coincidingPairs = getCoincidingEmployeePairs(employeePairs);
 
-        output(coincidingPairs);
+        List<Pair> summedPairs = sumPeriodsOfSamePairs(coincidingPairs);
+
+        Pair longestPair = getPairWithLongestPeriod(summedPairs);
+
+        output(longestPair);
 
     }
 
-    private static void output(List<Pair> pairs) {
-        for (Pair pair : pairs) {
-            System.out.println(pair.getEmployee1().getEmpId()
-                    + ", " + pair.getEmployee2().getEmpId()
-                    + ", " + pair.getPeriodInMonths());
-        }
+    private static Pair getPairWithLongestPeriod(List<Pair> pairs) {
+
+
+
+        return null;
+    }
+
+    private static List<Pair> sumPeriodsOfSamePairs(List<Pair> pairs) {
+
+
+
+
+        return pairs;
+    }
+
+    private static void output(Pair pair) {
+        System.out.println(pair.getEmployee1().getEmpId()
+                + ", " + pair.getEmployee2().getEmpId()
+                + ", " + pair.getPeriodInMonths());
     }
 
     private static List<Pair> getCoincidingEmployeePairs(List<Pair> pairs) {
