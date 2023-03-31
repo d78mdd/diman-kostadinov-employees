@@ -103,12 +103,12 @@ public class Main {
                 if (laterEmployee.getDateTo().compareTo(earlierEmployee.getDateTo()) >= 0) {
                     // emp2 ended after emp1 ended
 
-                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(earlierEmployee.getDateTo(), TIME_UNIT));
+                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(earlierEmployee.getDateTo().plusDays(1), TIME_UNIT));
 
                 } else {
                     // emp2 ended before emp1 ended
 
-                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(laterEmployee.getDateTo(), TIME_UNIT));
+                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(laterEmployee.getDateTo().plusDays(1), TIME_UNIT));
                 }
             }
 

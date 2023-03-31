@@ -67,7 +67,7 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return empId == employee.empId && projectId == employee.projectId && dateFrom.equals(employee.dateFrom) && dateTo.equals(employee.dateTo);
+        return empId == employee.empId && projectId == employee.projectId;
     }
 
     @Override
