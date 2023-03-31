@@ -22,11 +22,20 @@ public class Main {
         List<List<String>> records = getRecords();
 
         List<Employee> employeeList = mapRecordsToEmployees(records);
+        if (employeeList == null || employeeList.isEmpty()) {
+            return;
+        }
 
 
         List<Pair> employeePairs = getEmployeePairsByProject(employeeList);
+        if (employeePairs == null || employeePairs.isEmpty()) {
+            return;
+        }
 
         List<Pair> coincidingPairs = getCoincidingEmployeePairs(employeePairs);
+        if (coincidingPairs == null || coincidingPairs.isEmpty()) {
+            return;
+        }
 
         List<Pair> summedPairs = sumPeriodsOfSamePairs(coincidingPairs);
 
@@ -53,9 +62,7 @@ public class Main {
 
         List<Pair> summedPairs = new ArrayList<>();
 
-        for (int i = 0; i < pairs.size(); i++) {
-            Pair pair = pairs.get(i);
-
+        for (Pair pair : pairs) {
             if (!summedPairs.contains(pair)) {
                 summedPairs.add(pair);
 
@@ -80,35 +87,35 @@ public class Main {
     private static List<Pair> getCoincidingEmployeePairs(List<Pair> pairs) {
         List<Pair> coincidingPairs = new ArrayList<>();
 
-        for (int i = 0; i < pairs.size(); i++) {
+        for (Pair pair : pairs) {
 
             Employee earlierEmployee;
             Employee laterEmployee;
 
-            LocalDate emp1DateFrom = pairs.get(i).getEmployee1().getDateFrom();
-            LocalDate emp2DateFrom = pairs.get(i).getEmployee2().getDateFrom();
+            LocalDate emp1DateFrom = pair.getEmployee1().getDateFrom();
+            LocalDate emp2DateFrom = pair.getEmployee2().getDateFrom();
 
             if (emp1DateFrom.compareTo(emp2DateFrom) < 0) {
-                earlierEmployee = pairs.get(i).getEmployee1();
-                laterEmployee = pairs.get(i).getEmployee2();
+                earlierEmployee = pair.getEmployee1();
+                laterEmployee = pair.getEmployee2();
             } else {
-                earlierEmployee = pairs.get(i).getEmployee2();
-                laterEmployee = pairs.get(i).getEmployee1();
+                earlierEmployee = pair.getEmployee2();
+                laterEmployee = pair.getEmployee1();
             }
 
             if (haveCoincidingPeriods(earlierEmployee, laterEmployee)) {
 
-                coincidingPairs.add(pairs.get(i));
+                coincidingPairs.add(pair);
 
                 if (laterEmployee.getDateTo().compareTo(earlierEmployee.getDateTo()) >= 0) {
                     // emp2 ended after emp1 ended
 
-                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(earlierEmployee.getDateTo().plusDays(1), TIME_UNIT));
+                    pair.setPeriod(laterEmployee.getDateFrom().until(earlierEmployee.getDateTo().plusDays(1), TIME_UNIT));
 
                 } else {
                     // emp2 ended before emp1 ended
 
-                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(laterEmployee.getDateTo().plusDays(1), TIME_UNIT));
+                    pair.setPeriod(laterEmployee.getDateFrom().until(laterEmployee.getDateTo().plusDays(1), TIME_UNIT));
                 }
             }
 
