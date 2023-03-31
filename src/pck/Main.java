@@ -24,7 +24,7 @@ public class Main {
 
         List<Pair> employeePairs = getEmployeePairsByProject(employeeList);
 
-        List<Pair> coincidingPairs = getCoincidingEmployeePairs2(employeePairs);
+        List<Pair> coincidingPairs = getCoincidingEmployeePairs(employeePairs);
 
         output(coincidingPairs);
 
@@ -38,7 +38,7 @@ public class Main {
         }
     }
 
-    private static List<Pair> getCoincidingEmployeePairs2(List<Pair> pairs) {
+    private static List<Pair> getCoincidingEmployeePairs(List<Pair> pairs) {
         List<Pair> coincidingPairs = new ArrayList<>();
 
         for (int i = 0; i < pairs.size(); i++) {
@@ -46,28 +46,30 @@ public class Main {
             Employee emp1 = getEarlierEmployee(pairs.get(i));
             Employee emp2 = getLaterEmployee(pairs.get(i));
 
-            if (emp2.getDateFrom().compareTo(emp1.getDateTo()) >= 0) {
-                // do nothing - they don't coincide
+            if (haveCoincidingPeriods(emp1, emp2)) {
 
-            } else {
-                // they coincide
                 coincidingPairs.add(pairs.get(i));
 
-                if (emp2.getDateTo().compareTo(emp1.getDateTo()) >= 0) {   // emp2 ended after emp1 ended
+                if (emp2.getDateTo().compareTo(emp1.getDateTo()) >= 0) {
+                    // emp2 ended after emp1 ended
 
                     pairs.get(i).setPeriodInMonths(getPeriod(emp2.getDateFrom(), emp1.getDateTo()));
 
-                } else {    // emp2 ended before emp1 ended
+                } else {
+                    // emp2 ended before emp1 ended
 
                     pairs.get(i).setPeriodInMonths(getPeriod(emp2.getDateFrom(), emp2.getDateTo()));
                 }
-
             }
 
         }
 
 
         return coincidingPairs;
+    }
+
+    private static boolean haveCoincidingPeriods(Employee emp1, Employee emp2) {
+        return emp2.getDateFrom().compareTo(emp1.getDateTo()) < 0;
     }
 
     private static long getPeriod(LocalDate date1, LocalDate date2) {
