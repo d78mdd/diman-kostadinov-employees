@@ -15,7 +15,8 @@ public class EmployeeService {
 
     private static final ChronoUnit TIME_UNIT = DAYS;
 
-    public static void main(String[] args) throws IOException {
+
+    public void getLongestEmployeeRecord() throws IOException {
 
         List<List<String>> records = getRecordsFromFile("sample_data1.csv");
 
@@ -43,7 +44,7 @@ public class EmployeeService {
 
     }
 
-    private static Pair getPairWithLongestPeriod(List<Pair> pairs) {
+    public Pair getPairWithLongestPeriod(List<Pair> pairs) {
         Pair longestPair = pairs.get(0);
 
         for (int i = 1; i < pairs.size(); i++) {
@@ -56,7 +57,7 @@ public class EmployeeService {
         return longestPair;
     }
 
-    private static List<Pair> sumPeriodsOfSamePairs(List<Pair> pairs) {
+    public List<Pair> sumPeriodsOfSamePairs(List<Pair> pairs) {
 
         List<Pair> summedPairs = new ArrayList<>();
 
@@ -77,7 +78,7 @@ public class EmployeeService {
     }
 
 
-    private static List<Pair> getCoincidingEmployeePairs(List<Pair> pairs) {
+    public List<Pair> getCoincidingEmployeePairs(List<Pair> pairs) {
         List<Pair> coincidingPairs = new ArrayList<>();
 
         for (Pair pair : pairs) {
@@ -117,12 +118,12 @@ public class EmployeeService {
         return coincidingPairs;
     }
 
-    private static boolean haveCoincidingPeriods(Employee emp1, Employee emp2) {
+    public boolean haveCoincidingPeriods(Employee emp1, Employee emp2) {
         return emp2.getDateFrom().compareTo(emp1.getDateTo()) < 0;
     }
 
 
-    private static List<Pair> getEmployeePairsByProject(List<Employee> employees) {
+    public List<Pair> getEmployeePairsByProject(List<Employee> employees) {
         List<Pair> pairs = new ArrayList<>();
 
         for (int i = 0; i < employees.size() - 1; i++) {
