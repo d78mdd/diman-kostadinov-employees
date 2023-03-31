@@ -37,16 +37,36 @@ public class Main {
     private static Pair getPairWithLongestPeriod(List<Pair> pairs) {
 
 
-
         return null;
     }
 
     private static List<Pair> sumPeriodsOfSamePairs(List<Pair> pairs) {
 
+        List<Pair> summedPairs = new ArrayList<>();
 
+        for (int i = 0; i < pairs.size(); i++) {
+            Pair pair = pairs.get(i);
 
+            int emp1Id = pair.getEmployee1().getEmpId();
+            int emp2Id = pair.getEmployee2().getEmpId();
 
-        return pairs;
+            int prjId = pair.getEmployee1().getProjectId();
+            // at this point employee2 should have the same projectId
+
+            if (!summedPairs.contains(pair)) {
+                summedPairs.add(pair);
+
+            } else {
+                int addedPairIndex = summedPairs.indexOf(pair);
+
+                Pair summedPair = summedPairs.get(addedPairIndex);
+                long currentPeriod = summedPair.getPeriodInMonths();
+
+                summedPair.setPeriodInMonths(currentPeriod + pair.getPeriodInMonths());
+            }
+        }
+
+        return summedPairs;
     }
 
     private static void output(Pair pair) {
