@@ -43,27 +43,44 @@ public class Main {
 
         for (int i = 0; i < pairs.size(); i++) {
 
-            Employee emp1 = getEarlierEmployee(pairs.get(i));
-            Employee emp2 = getLaterEmployee(pairs.get(i));
+            Employee earlierEmployee;
+            LocalDate emp1DateFrom = pairs.get(i).getEmployee1().getDateFrom();
+            LocalDate emp2DateFrom = pairs.get(i).getEmployee2().getDateFrom();
+            if (emp1DateFrom.compareTo(emp2DateFrom) < 0) {
+                earlierEmployee = pairs.get(i).getEmployee1();
+            } else {
+                earlierEmployee = pairs.get(i).getEmployee2();
+            }
 
-            if (haveCoincidingPeriods(emp1, emp2)) {
+
+            Employee laterEmployee ;
+            LocalDate emp1DateFrom2 = pairs.get(i).getEmployee1().getDateFrom();
+            LocalDate emp2DateFrom2 = pairs.get(i).getEmployee2().getDateFrom();
+            if (emp1DateFrom2.compareTo(emp2DateFrom2) >= 0) {
+                laterEmployee = pairs.get(i).getEmployee1();
+            } else {
+                laterEmployee = pairs.get(i).getEmployee2();
+            }
+
+
+
+            if (haveCoincidingPeriods(earlierEmployee, laterEmployee)) {
 
                 coincidingPairs.add(pairs.get(i));
 
-                if (emp2.getDateTo().compareTo(emp1.getDateTo()) >= 0) {
+                if (laterEmployee.getDateTo().compareTo(earlierEmployee.getDateTo()) >= 0) {
                     // emp2 ended after emp1 ended
 
-                    pairs.get(i).setPeriodInMonths(emp2.getDateFrom().until(emp1.getDateTo(), MONTHS));
+                    pairs.get(i).setPeriodInMonths(laterEmployee.getDateFrom().until(earlierEmployee.getDateTo(), MONTHS));
 
                 } else {
                     // emp2 ended before emp1 ended
 
-                    pairs.get(i).setPeriodInMonths(emp2.getDateFrom().until(emp2.getDateTo(), MONTHS));
+                    pairs.get(i).setPeriodInMonths(laterEmployee.getDateFrom().until(laterEmployee.getDateTo(), MONTHS));
                 }
             }
 
         }
-
 
         return coincidingPairs;
     }
@@ -72,26 +89,6 @@ public class Main {
         return emp2.getDateFrom().compareTo(emp1.getDateTo()) < 0;
     }
 
-
-    private static Employee getEarlierEmployee(Pair pair) {
-        LocalDate emp1DateFrom = pair.getEmployee1().getDateFrom();
-        LocalDate emp2DateFrom = pair.getEmployee2().getDateFrom();
-        if (emp1DateFrom.compareTo(emp2DateFrom) < 0) {
-            return pair.getEmployee1();
-        } else {
-            return pair.getEmployee2();
-        }
-    }
-
-    private static Employee getLaterEmployee(Pair pair) {
-        LocalDate emp1DateFrom = pair.getEmployee1().getDateFrom();
-        LocalDate emp2DateFrom = pair.getEmployee2().getDateFrom();
-        if (emp1DateFrom.compareTo(emp2DateFrom) >= 0) {
-            return pair.getEmployee1();
-        } else {
-            return pair.getEmployee2();
-        }
-    }
 
 
     private static List<Pair> getEmployeePairsByProject(List<Employee> employees) {
