@@ -5,15 +5,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.time.temporal.ChronoUnit.MONTHS;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class Main {
 
     private static final String COMMA_DELIMITER = ",";
+    private static final ChronoUnit TIME_UNIT = DAYS;
 
     public static void main(String[] args) throws IOException {
 
@@ -39,7 +41,7 @@ public class Main {
 
         for (int i = 1; i < pairs.size(); i++) {
             Pair pair = pairs.get(i);
-            if (longestPair.getPeriodInMonths() < pair.getPeriodInMonths()) {
+            if (longestPair.getPeriod() < pair.getPeriod()) {
                 longestPair = pair;
             }
         }
@@ -60,9 +62,9 @@ public class Main {
             } else {
                 int addedPairIndex = summedPairs.indexOf(pair);
                 Pair summedPair = summedPairs.get(addedPairIndex);
-                long currentPeriod = summedPair.getPeriodInMonths();
+                long currentPeriod = summedPair.getPeriod();
 
-                summedPair.setPeriodInMonths(currentPeriod + pair.getPeriodInMonths());
+                summedPair.setPeriod(currentPeriod + pair.getPeriod());
             }
         }
 
@@ -72,7 +74,7 @@ public class Main {
     private static void output(Pair pair) {
         System.out.println(pair.getEmployee1().getEmpId()
                 + ", " + pair.getEmployee2().getEmpId()
-                + ", " + pair.getPeriodInMonths());
+                + ", " + pair.getPeriod());
     }
 
     private static List<Pair> getCoincidingEmployeePairs(List<Pair> pairs) {
@@ -101,12 +103,12 @@ public class Main {
                 if (laterEmployee.getDateTo().compareTo(earlierEmployee.getDateTo()) >= 0) {
                     // emp2 ended after emp1 ended
 
-                    pairs.get(i).setPeriodInMonths(laterEmployee.getDateFrom().until(earlierEmployee.getDateTo(), MONTHS));
+                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(earlierEmployee.getDateTo(), TIME_UNIT));
 
                 } else {
                     // emp2 ended before emp1 ended
 
-                    pairs.get(i).setPeriodInMonths(laterEmployee.getDateFrom().until(laterEmployee.getDateTo(), MONTHS));
+                    pairs.get(i).setPeriod(laterEmployee.getDateFrom().until(laterEmployee.getDateTo(), TIME_UNIT));
                 }
             }
 

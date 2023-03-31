@@ -6,7 +6,7 @@ public class Pair {
     private Employee employee1;
     private Employee employee2;
 
-    private long periodInMonths;
+    private long period;
 
     public Pair() {
     }
@@ -32,12 +32,12 @@ public class Pair {
         this.employee2 = employee2;
     }
 
-    public long getPeriodInMonths() {
-        return periodInMonths;
+    public long getPeriod() {
+        return period;
     }
 
-    public void setPeriodInMonths(long periodInMonths) {
-        this.periodInMonths = periodInMonths;
+    public void setPeriod(long period) {
+        this.period = period;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Pair {
         return "Pair{" +
                 "employeeId1=" + employee1 +
                 ", employeeId2=" + employee2 +
-                ", periodInMonths=" + periodInMonths +
+                ", period=" + period +
                 '}';
     }
 
