@@ -44,25 +44,18 @@ public class Main {
         for (int i = 0; i < pairs.size(); i++) {
 
             Employee earlierEmployee;
+            Employee laterEmployee;
+
             LocalDate emp1DateFrom = pairs.get(i).getEmployee1().getDateFrom();
             LocalDate emp2DateFrom = pairs.get(i).getEmployee2().getDateFrom();
+
             if (emp1DateFrom.compareTo(emp2DateFrom) < 0) {
                 earlierEmployee = pairs.get(i).getEmployee1();
+                laterEmployee = pairs.get(i).getEmployee2();
             } else {
                 earlierEmployee = pairs.get(i).getEmployee2();
-            }
-
-
-            Employee laterEmployee ;
-            LocalDate emp1DateFrom2 = pairs.get(i).getEmployee1().getDateFrom();
-            LocalDate emp2DateFrom2 = pairs.get(i).getEmployee2().getDateFrom();
-            if (emp1DateFrom2.compareTo(emp2DateFrom2) >= 0) {
                 laterEmployee = pairs.get(i).getEmployee1();
-            } else {
-                laterEmployee = pairs.get(i).getEmployee2();
             }
-
-
 
             if (haveCoincidingPeriods(earlierEmployee, laterEmployee)) {
 
@@ -88,7 +81,6 @@ public class Main {
     private static boolean haveCoincidingPeriods(Employee emp1, Employee emp2) {
         return emp2.getDateFrom().compareTo(emp1.getDateTo()) < 0;
     }
-
 
 
     private static List<Pair> getEmployeePairsByProject(List<Employee> employees) {
