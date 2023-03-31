@@ -1,25 +1,23 @@
 package pck;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static pck.Mappers.mapRecordsToEmployees;
+import static pck.Utils.getRecordsFromFile;
+import static pck.Utils.output;
 
-public class Main {
+public class EmployeeService {
 
-    private static final String COMMA_DELIMITER = ",";
     private static final ChronoUnit TIME_UNIT = DAYS;
 
     public static void main(String[] args) throws IOException {
 
-        List<List<String>> records = getRecords();
+        List<List<String>> records = getRecordsFromFile("sample_data1.csv");
 
         List<Employee> employeeList = mapRecordsToEmployees(records);
         if (employeeList == null || employeeList.isEmpty()) {
@@ -78,11 +76,6 @@ public class Main {
         return summedPairs;
     }
 
-    private static void output(Pair pair) {
-        System.out.println(pair.getEmployee1().getEmpId()
-                + ", " + pair.getEmployee2().getEmpId()
-                + ", " + pair.getPeriod());
-    }
 
     private static List<Pair> getCoincidingEmployeePairs(List<Pair> pairs) {
         List<Pair> coincidingPairs = new ArrayList<>();
@@ -148,60 +141,4 @@ public class Main {
         return pairs;
     }
 
-
-    private static List<Employee> mapRecordsToEmployees(List<List<String>> records) {
-
-        List<Employee> employeeList = new ArrayList<>();
-
-        for (List<String> record : records) {
-            employeeList.add(mapRecordToEmployee(record));
-        }
-
-        return employeeList;
-    }
-
-
-    private static Employee mapRecordToEmployee(List<String> record) {
-
-        Employee employee = new Employee();
-
-        employee.setEmpId(Integer.parseInt(record.get(0)));
-        employee.setProjectId(Integer.parseInt(record.get(1)));
-        employee.setDateFrom(LocalDate.parse(record.get(2)));
-        employee.setDateTo(parseDateTo(record.get(3)));
-
-        return employee;
-    }
-
-    private static LocalDate parseDateTo(String dateTo) {
-
-        if (dateTo == null || dateTo.equals("NULL")) {
-            return LocalDate.now();
-        } else {
-            return LocalDate.parse(dateTo);
-        }
-    }
-
-
-    private static List<List<String>> getRecords() throws IOException {
-
-        List<List<String>> records = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(getFileStream()))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-
-                String[] values = line.split(COMMA_DELIMITER);
-
-                records.add(Arrays.asList(values));
-
-            }
-        }
-
-        return records;
-    }
-
-    private static InputStream getFileStream() {
-        return Main.class.getResourceAsStream("sample_data1.csv");
-    }
 }
