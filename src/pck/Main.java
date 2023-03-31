@@ -35,9 +35,16 @@ public class Main {
     }
 
     private static Pair getPairWithLongestPeriod(List<Pair> pairs) {
+        Pair longestPair = pairs.get(0);
 
+        for (int i = 1; i < pairs.size(); i++) {
+            Pair pair = pairs.get(i);
+            if (longestPair.getPeriodInMonths() < pair.getPeriodInMonths()) {
+                longestPair = pair;
+            }
+        }
 
-        return null;
+        return longestPair;
     }
 
     private static List<Pair> sumPeriodsOfSamePairs(List<Pair> pairs) {
@@ -47,18 +54,11 @@ public class Main {
         for (int i = 0; i < pairs.size(); i++) {
             Pair pair = pairs.get(i);
 
-            int emp1Id = pair.getEmployee1().getEmpId();
-            int emp2Id = pair.getEmployee2().getEmpId();
-
-            int prjId = pair.getEmployee1().getProjectId();
-            // at this point employee2 should have the same projectId
-
             if (!summedPairs.contains(pair)) {
                 summedPairs.add(pair);
 
             } else {
                 int addedPairIndex = summedPairs.indexOf(pair);
-
                 Pair summedPair = summedPairs.get(addedPairIndex);
                 long currentPeriod = summedPair.getPeriodInMonths();
 

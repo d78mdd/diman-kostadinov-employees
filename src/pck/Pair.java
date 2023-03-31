@@ -1,5 +1,7 @@
 package pck;
 
+import java.util.Objects;
+
 public class Pair {
     private Employee employee1;
     private Employee employee2;
@@ -45,5 +47,18 @@ public class Pair {
                 ", employeeId2=" + employee2 +
                 ", periodInMonths=" + periodInMonths +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair pair = (Pair) o;
+        return employee1.equals(pair.employee1) && employee2.equals(pair.employee2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employee1, employee2);
     }
 }

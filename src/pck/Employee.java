@@ -1,6 +1,7 @@
 package pck;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Employee {
 
@@ -59,5 +60,18 @@ public class Employee {
                 ", dateFrom=" + dateFrom +
                 ", dateTo=" + dateTo +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return empId == employee.empId && projectId == employee.projectId && dateFrom.equals(employee.dateFrom) && dateTo.equals(employee.dateTo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(empId, projectId, dateFrom, dateTo);
     }
 }
