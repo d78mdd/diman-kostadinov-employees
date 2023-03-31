@@ -53,12 +53,12 @@ public class Main {
                 if (emp2.getDateTo().compareTo(emp1.getDateTo()) >= 0) {
                     // emp2 ended after emp1 ended
 
-                    pairs.get(i).setPeriodInMonths(getPeriod(emp2.getDateFrom(), emp1.getDateTo()));
+                    pairs.get(i).setPeriodInMonths(emp2.getDateFrom().until(emp1.getDateTo(), MONTHS));
 
                 } else {
                     // emp2 ended before emp1 ended
 
-                    pairs.get(i).setPeriodInMonths(getPeriod(emp2.getDateFrom(), emp2.getDateTo()));
+                    pairs.get(i).setPeriodInMonths(emp2.getDateFrom().until(emp2.getDateTo(), MONTHS));
                 }
             }
 
@@ -70,11 +70,6 @@ public class Main {
 
     private static boolean haveCoincidingPeriods(Employee emp1, Employee emp2) {
         return emp2.getDateFrom().compareTo(emp1.getDateTo()) < 0;
-    }
-
-    private static long getPeriod(LocalDate date1, LocalDate date2) {
-
-        return date1.until(date2, MONTHS);
     }
 
 
