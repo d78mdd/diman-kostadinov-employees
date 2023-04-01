@@ -36,12 +36,57 @@ public class EmployeeService {
             return;
         }
 
-        List<Pair> summedPairs = sumPeriodsOfSamePairs(coincidingPairs);
+        List<Pair> summedPairs = sumPeriodsOfSameEmployeesAndProject(coincidingPairs);
 
-        Pair longestPair = getPairWithLongestPeriod(summedPairs);
+
+        List<Pair> mergedSummedPairs = mergeSummedPeriodsOfSameEmployees(summedPairs);
+
+
+        Pair longestPair = getPairWithLongestPeriod(mergedSummedPairs);
 
         output(longestPair);
 
+    }
+
+    private List<Pair> mergeSummedPeriodsOfSameEmployees(List<Pair> pairs) {
+        List<Pair> mergedSummedPairs = new ArrayList<>();
+
+        for (Pair pair : pairs) {
+            if (!contains(mergedSummedPairs, pair)) {
+                mergedSummedPairs.add(pair);
+            } else {
+                int index = indexOf(mergedSummedPairs, pair);
+                mergedSummedPairs.get(index).setPeriod(mergedSummedPairs.get(index).getPeriod() + pair.getPeriod());
+            }
+
+        }
+
+        return mergedSummedPairs;
+    }
+
+    private int indexOf(List<Pair> pairs, Pair pair) {
+
+        for (int i = 0; i < pairs.size(); i++) {
+            if (pairs.get(i).getEmployee1().getEmpId() == pair.getEmployee1().getEmpId() &&
+                pairs.get(i).getEmployee2().getEmpId() == pair.getEmployee2().getEmpId()) {
+                return i;
+            }
+        }
+
+        return -1;
+
+    }
+
+    private boolean contains(List<Pair> pairs, Pair pair) {
+
+        for (Pair value : pairs) {
+            if (value.getEmployee1().getEmpId() == pair.getEmployee1().getEmpId() &&
+                value.getEmployee2().getEmpId() == pair.getEmployee2().getEmpId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Pair getPairWithLongestPeriod(List<Pair> pairs) {
@@ -57,7 +102,7 @@ public class EmployeeService {
         return longestPair;
     }
 
-    public List<Pair> sumPeriodsOfSamePairs(List<Pair> pairs) {
+    public List<Pair> sumPeriodsOfSameEmployeesAndProject(List<Pair> pairs) {
 
         List<Pair> summedPairs = new ArrayList<>();
 
