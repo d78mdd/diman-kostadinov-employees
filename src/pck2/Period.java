@@ -1,7 +1,6 @@
 package pck2;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 import static java.lang.Math.abs;
 import static pck2.EmployeeService.TIME_UNIT;

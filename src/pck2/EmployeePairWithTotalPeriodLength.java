@@ -1,7 +1,5 @@
 package pck2;
 
-import java.util.List;
-
 public class EmployeePairWithTotalPeriodLength {
 
     private EmployeePair employeePair;

@@ -1,6 +1,5 @@
 package pck2;
 
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -9,12 +8,12 @@ import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static pck2.Mappers.mapRecordsToBeans;
+import static pck2.Mappers.mapToEmployeePairWithTotalPeriodLength;
 import static pck2.Utils.getRecordsFromFile;
+import static pck2.Utils.output;
 
 
 public class EmployeeService {
-
-    List<Employee> employees = new ArrayList<>();
 
 
     public static final ChronoUnit TIME_UNIT = DAYS;
@@ -28,132 +27,28 @@ public class EmployeeService {
         if (workRecords == null || workRecords.isEmpty()) {
             return;
         }
-        System.out.println(workRecords);
-        System.out.println();
-
 
         List<WorkRecordPair> workRecordPairs = getAllRecordPairsByProject(workRecords);
         if (workRecordPairs == null || workRecordPairs.isEmpty()) {
             return;
         }
-        System.out.println(workRecordPairs);
-        System.out.println();
 
         List<WorkRecordPair> coincidingPairs = filterByCoincidingPairs(workRecordPairs);
         if (coincidingPairs == null || coincidingPairs.isEmpty()) {
             return;
         }
-        System.out.println(coincidingPairs);
 
         List<EmployeePairWithTotalPeriodLength> totalPeriodLengths = mapToEmployeePairWithTotalPeriodLength(coincidingPairs);
-        System.out.println(totalPeriodLengths);
 
         EmployeePairWithTotalPeriodLength longestPair = getPairWithLongestPeriod(totalPeriodLengths);
-        System.out.println(longestPair);
 
-//        output(longestPair);
-
-    }
-
-    private List<EmployeePairWithTotalPeriodLength> mapToEmployeePairWithTotalPeriodLength(List<WorkRecordPair> coincidingPairs) {
-        List<EmployeePairWithTotalPeriodLength> totalPeriodLengths = new ArrayList<>();
-
-        for (WorkRecordPair coincidingPair : coincidingPairs) {
-            if (containsPair(totalPeriodLengths, coincidingPair)) {
-                increaseTotalPairPeriodLength(totalPeriodLengths, coincidingPair);
-            } else {
-                add(totalPeriodLengths, coincidingPair);
-            }
-        }
-
-        return totalPeriodLengths;
-    }
-
-    private void increaseTotalPairPeriodLength(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
-
-        for (EmployeePairWithTotalPeriodLength totalPeriodLength : totalPeriodLengths) {
-
-            boolean exists = totalPeriodLength.getEmployeePair().equals(new EmployeePair(
-                    workRecordPair.getWorkRecord1().getEmployee(),
-                    workRecordPair.getWorkRecord2().getEmployee()
-            ));
-
-            if (exists) {
-                totalPeriodLength.setTotalPeriodLength(totalPeriodLength.getTotalPeriodLength() + workRecordPair.getCoincidingPeriodLength());
-            }
-        }
+        output(longestPair);
 
     }
 
-    private boolean containsPair(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
 
-        for (EmployeePairWithTotalPeriodLength totalPeriodLength : totalPeriodLengths) {
 
-            boolean exists = totalPeriodLength.getEmployeePair().equals(new EmployeePair(
-                    workRecordPair.getWorkRecord1().getEmployee(),
-                    workRecordPair.getWorkRecord2().getEmployee()
-            ));
 
-            if (exists) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void add(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
-        EmployeePairWithTotalPeriodLength employeePairWithTotalPeriodLength = new EmployeePairWithTotalPeriodLength();
-
-        employeePairWithTotalPeriodLength.setEmployeePair(new EmployeePair(
-                workRecordPair.getWorkRecord1().getEmployee(),
-                workRecordPair.getWorkRecord2().getEmployee()
-        ));
-        employeePairWithTotalPeriodLength.setTotalPeriodLength(workRecordPair.getCoincidingPeriodLength());
-
-        totalPeriodLengths.add(employeePairWithTotalPeriodLength);
-    }
-
-//    private List<Pair> mergeSummedPeriodsOfSameEmployees(List<Pair> pairs) {
-//        List<Pair> mergedSummedPairs = new ArrayList<>();
-//
-//        for (Pair pair : pairs) {
-//            if (!contains(mergedSummedPairs, pair)) {
-//                mergedSummedPairs.add(pair);
-//            } else {
-//                int index = indexOf(mergedSummedPairs, pair);
-//                mergedSummedPairs.get(index).setPeriod(mergedSummedPairs.get(index).getPeriod() + pair.getPeriod());
-//            }
-//
-//        }
-//
-//        return mergedSummedPairs;
-//    }
-
-//    private int indexOf(List<Pair> pairs, Pair pair) {
-//
-//        for (int i = 0; i < pairs.size(); i++) {
-//            if (pairs.get(i).getEmployee1().getEmpId() == pair.getEmployee1().getEmpId() &&
-//                    pairs.get(i).getEmployee2().getEmpId() == pair.getEmployee2().getEmpId()) {
-//                return i;
-//            }
-//        }
-//
-//        return -1;
-//
-//    }
-
-//    private boolean contains(List<Pair> pairs, Pair pair) {
-//
-//        for (Pair value : pairs) {
-//            if (value.getEmployee1().getEmpId() == pair.getEmployee1().getEmpId() &&
-//                    value.getEmployee2().getEmpId() == pair.getEmployee2().getEmpId()) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
 
     public EmployeePairWithTotalPeriodLength getPairWithLongestPeriod(List<EmployeePairWithTotalPeriodLength> pairs) {
         EmployeePairWithTotalPeriodLength longestPair = pairs.get(0);
@@ -167,27 +62,6 @@ public class EmployeeService {
 
         return longestPair;
     }
-
-//    public List<Pair> sumPeriodsOfSameEmployeesAndProject(List<WorkRecordPair> pairs) {
-//
-//        List<Pair> summedPairs = new ArrayList<>();
-//
-//        for (Pair pair : pairs) {
-//            if (!summedPairs.contains(pair)) {
-//                summedPairs.add(pair);
-//
-//            } else {
-//                int addedPairIndex = summedPairs.indexOf(pair);
-//                Pair summedPair = summedPairs.get(addedPairIndex);
-//                long currentPeriod = summedPair.getPeriod();
-//
-//                summedPair.setPeriod(currentPeriod + pair.getPeriod());
-//            }
-//        }
-//
-//        return summedPairs;
-//    }
-
 
     public List<WorkRecordPair> filterByCoincidingPairs(List<WorkRecordPair> pairs) {
         List<WorkRecordPair> coincidingPairs = new ArrayList<>();
@@ -258,6 +132,5 @@ public class EmployeeService {
 
         return pairs;
     }
-
 
 }

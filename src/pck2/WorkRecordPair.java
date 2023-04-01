@@ -5,7 +5,6 @@ public class WorkRecordPair {
     private WorkRecord workRecord1;
     private WorkRecord workRecord2;
 
-    // temporarily
     private long coincidingPeriodLength;
 
     public long getCoincidingPeriodLength() {

@@ -1,6 +1,5 @@
 package pck2;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,26 +9,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static pck2.EmployeeService.TIME_UNIT;
-
 public class Utils {
-
-    public long sumPeriods(List<Period> periods) {
-        long sum = 0;
-        for (Period period : periods) {
-            sum += period.getDateFrom().until(period.getDateTo(), TIME_UNIT) + 1;
-        }
-        return sum;
-    }
 
     private static final String COMMA_DELIMITER = ",";
 
 
-//    public static void output(Pair pair) {
-//        System.out.println(pair.getEmployee1().getEmpId()
-//                + ", " + pair.getEmployee2().getEmpId()
-//                + ", " + pair.getPeriod());
-//    }
+    public static void output(EmployeePairWithTotalPeriodLength pair) {
+        System.out.println(pair.getEmployeePair().getEmployee1().getEmpId()
+                + ", " + pair.getEmployeePair().getEmployee2().getEmpId()
+                + ", " + pair.getTotalPeriodLength());
+    }
 
     public static LocalDate parseNullDate(String date) {
 

@@ -1,7 +1,5 @@
 package pck2;
 
-
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +32,68 @@ public class Mappers {
 
         return workRecord;
     }
+
+    public static List<EmployeePairWithTotalPeriodLength> mapToEmployeePairWithTotalPeriodLength(List<WorkRecordPair> coincidingPairs) {
+        List<EmployeePairWithTotalPeriodLength> totalPeriodLengths = new ArrayList<>();
+
+        for (WorkRecordPair coincidingPair : coincidingPairs) {
+            if (containsPair(totalPeriodLengths, coincidingPair)) {
+                increaseTotalPairPeriodLength(totalPeriodLengths, coincidingPair);
+            } else {
+                add(totalPeriodLengths, coincidingPair);
+            }
+        }
+
+        return totalPeriodLengths;
+    }
+
+    private static void increaseTotalPairPeriodLength(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
+
+        for (EmployeePairWithTotalPeriodLength totalPeriodLength : totalPeriodLengths) {
+
+            boolean exists = totalPeriodLength.getEmployeePair().equals(new EmployeePair(
+                    workRecordPair.getWorkRecord1().getEmployee(),
+                    workRecordPair.getWorkRecord2().getEmployee()
+            ));
+
+            if (exists) {
+                totalPeriodLength.setTotalPeriodLength(totalPeriodLength.getTotalPeriodLength() + workRecordPair.getCoincidingPeriodLength());
+            }
+        }
+
+    }
+
+    private static boolean containsPair(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
+
+        for (EmployeePairWithTotalPeriodLength totalPeriodLength : totalPeriodLengths) {
+
+            boolean exists = totalPeriodLength.getEmployeePair().equals(new EmployeePair(
+                    workRecordPair.getWorkRecord1().getEmployee(),
+                    workRecordPair.getWorkRecord2().getEmployee()
+            ));
+
+            if (exists) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void add(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
+        EmployeePairWithTotalPeriodLength employeePairWithTotalPeriodLength = new EmployeePairWithTotalPeriodLength();
+
+        employeePairWithTotalPeriodLength.setEmployeePair(new EmployeePair(
+                workRecordPair.getWorkRecord1().getEmployee(),
+                workRecordPair.getWorkRecord2().getEmployee()
+        ));
+        employeePairWithTotalPeriodLength.setTotalPeriodLength(workRecordPair.getCoincidingPeriodLength());
+
+        totalPeriodLengths.add(employeePairWithTotalPeriodLength);
+    }
+
+
+
+
 
 }
