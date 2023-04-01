@@ -1,4 +1,4 @@
-package pck2;
+package com.diman.employees.beans;
 
 public class EmployeePairWithTotalPeriodLength {
 

@@ -1,9 +1,9 @@
-package pck2;
+package com.diman.employees.beans;
 
 import java.time.LocalDate;
 
+import static com.diman.employees.impl.EmployeeService.TIME_UNIT;
 import static java.lang.Math.abs;
-import static pck2.EmployeeService.TIME_UNIT;
 
 public class Period {
 

@@ -1,16 +1,22 @@
-package pck2;
+package com.diman.employees.impl;
+
+import com.diman.employees.beans.EmployeePairWithTotalPeriodLength;
+import com.diman.employees.beans.WorkRecord;
+import com.diman.employees.beans.WorkRecordPair;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static pck2.Mappers.mapRecordsToBeans;
-import static pck2.Mappers.mapToEmployeePairWithTotalPeriodLength;
-import static pck2.Utils.getRecordsFromFile;
-import static pck2.Utils.output;
+import static com.diman.employees.impl.Mappers.mapRecordsToBeans;
+import static com.diman.employees.impl.Mappers.mapToEmployeePairWithTotalPeriodLength;
+import static com.diman.employees.impl.Utils.getRecordsFromFile;
+import static com.diman.employees.impl.Utils.output;
 
 
 public class EmployeeService {
@@ -19,9 +25,9 @@ public class EmployeeService {
     public static final ChronoUnit TIME_UNIT = DAYS;
 
 
-    public void getLongestEmployeeRecord() throws IOException {
+    public void getLongestEmployeeRecord(URL resource) throws IOException, URISyntaxException {
 
-        List<List<String>> recordsFromFile = getRecordsFromFile("sample_data2.csv");
+        List<List<String>> recordsFromFile = getRecordsFromFile(resource);
 
         List<WorkRecord> workRecords = mapRecordsToBeans(recordsFromFile);
         if (workRecords == null || workRecords.isEmpty()) {

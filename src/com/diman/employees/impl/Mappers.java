@@ -1,10 +1,10 @@
-package pck2;
+package com.diman.employees.impl;
+
+import com.diman.employees.beans.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static pck2.Utils.parseNullDate;
 
 
 public class Mappers {
@@ -28,7 +28,7 @@ public class Mappers {
         workRecord.setProjectId(Integer.parseInt(record.get(1)));
         workRecord.setPeriod(new Period(
                 LocalDate.parse(record.get(2)),
-                parseNullDate(record.get(3))));
+                Utils.parseNullDate(record.get(3))));
 
         return workRecord;
     }

@@ -1,9 +1,10 @@
-package pck2;
+package com.diman.employees.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.diman.employees.beans.EmployeePairWithTotalPeriodLength;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +30,11 @@ public class Utils {
         }
     }
 
-    public static InputStream getFileStream(String file) {
-        return EmployeeService.class.getResourceAsStream(file);
+    private static FileInputStream getFileStream(URL file) throws FileNotFoundException, URISyntaxException {
+        return new FileInputStream(new File(file.toURI()));
     }
 
-    public static List<List<String>> getRecordsFromFile(String file) throws IOException {
+    public static List<List<String>> getRecordsFromFile(URL file) throws IOException, URISyntaxException {
 
         List<List<String>> records = new ArrayList<>();
 
