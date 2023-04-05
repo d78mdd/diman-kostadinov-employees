@@ -4,23 +4,33 @@ import com.diman.employees.beans.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import static com.diman.employees.impl.Utils.isEmpty;
 
 
 public class Mappers {
 
     public static List<WorkRecord> mapRecordsToBeans(List<List<String>> records) {
+        if (isEmpty(records)) {
+            return Collections.emptyList();
+        }
 
         List<WorkRecord> workRecords = new ArrayList<>();
 
         for (List<String> record : records) {
-            workRecords.add(mapRecordToBean(record));
+            workRecords.add(mapRecordToBean(record).orElseThrow(IllegalArgumentException::new));
         }
 
         return workRecords;
     }
 
-    public static WorkRecord mapRecordToBean(List<String> record) {
+    public static Optional<WorkRecord> mapRecordToBean(List<String> record) {
+        if (isEmpty(record)) {
+            return Optional.empty();
+        }
 
         WorkRecord workRecord = new WorkRecord();
 
@@ -30,10 +40,14 @@ public class Mappers {
                 LocalDate.parse(record.get(2)),
                 Utils.parseNullDate(record.get(3))));
 
-        return workRecord;
+        return Optional.of(workRecord);
     }
 
     public static List<EmployeePairWithTotalPeriodLength> mapToEmployeePairWithTotalPeriodLength(List<WorkRecordPair> coincidingPairs) {
+        if (isEmpty(coincidingPairs)) {
+            return Collections.emptyList();
+        }
+
         List<EmployeePairWithTotalPeriodLength> totalPeriodLengths = new ArrayList<>();
 
         for (WorkRecordPair coincidingPair : coincidingPairs) {
@@ -48,8 +62,20 @@ public class Mappers {
     }
 
     private static void increaseTotalPairPeriodLength(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
+        if (isEmpty(totalPeriodLengths)) {
+            return;
+        }
+        if (null == workRecordPair) {
+            return;
+        }
+        if (null == workRecordPair.getWorkRecord1() || null == workRecordPair.getWorkRecord2()) {
+            return;
+        }
 
         for (EmployeePairWithTotalPeriodLength totalPeriodLength : totalPeriodLengths) {
+            if (null == totalPeriodLength.getEmployeePair()) {
+                continue;
+            }
 
             boolean exists = totalPeriodLength.getEmployeePair().equals(new EmployeePair(
                     workRecordPair.getWorkRecord1().getEmployee(),
@@ -64,8 +90,20 @@ public class Mappers {
     }
 
     private static boolean containsPair(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
+        if (isEmpty(totalPeriodLengths)) {
+            return false;
+        }
+        if (null == workRecordPair) {
+            return false;
+        }
+        if (null == workRecordPair.getWorkRecord1() || null == workRecordPair.getWorkRecord2()) {
+            return false;
+        }
 
         for (EmployeePairWithTotalPeriodLength totalPeriodLength : totalPeriodLengths) {
+            if (null == totalPeriodLength.getEmployeePair()) {
+                continue;
+            }
 
             boolean exists = totalPeriodLength.getEmployeePair().equals(new EmployeePair(
                     workRecordPair.getWorkRecord1().getEmployee(),
@@ -81,6 +119,17 @@ public class Mappers {
     }
 
     private static void add(List<EmployeePairWithTotalPeriodLength> totalPeriodLengths, WorkRecordPair workRecordPair) {
+        if (null == totalPeriodLengths) {
+            return;
+        }
+        if (null == workRecordPair) {
+            return;
+        }
+        if (null == workRecordPair.getWorkRecord1() || null == workRecordPair.getWorkRecord2()) {
+            return;
+        }
+
+
         EmployeePairWithTotalPeriodLength employeePairWithTotalPeriodLength = new EmployeePairWithTotalPeriodLength();
 
         employeePairWithTotalPeriodLength.setEmployeePair(new EmployeePair(
@@ -91,9 +140,6 @@ public class Mappers {
 
         totalPeriodLengths.add(employeePairWithTotalPeriodLength);
     }
-
-
-
 
 
 }

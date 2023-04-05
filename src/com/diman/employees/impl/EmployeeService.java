@@ -10,13 +10,14 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static java.time.temporal.ChronoUnit.DAYS;
 import static com.diman.employees.impl.Mappers.mapRecordsToBeans;
 import static com.diman.employees.impl.Mappers.mapToEmployeePairWithTotalPeriodLength;
-import static com.diman.employees.impl.Utils.getRecordsFromFile;
-import static com.diman.employees.impl.Utils.output;
+import static com.diman.employees.impl.Utils.*;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class EmployeeService {
@@ -25,30 +26,31 @@ public class EmployeeService {
     public static final ChronoUnit TIME_UNIT = DAYS;
 
 
-    public void getLongestEmployeeRecord(URL resource) throws IOException, URISyntaxException {
+    public Optional<EmployeePairWithTotalPeriodLength> getLongestEmployeeRecord(URL resource) throws IOException, URISyntaxException {
 
         List<List<String>> recordsFromFile = getRecordsFromFile(resource);
 
         List<WorkRecord> workRecords = mapRecordsToBeans(recordsFromFile);
-        if (workRecords == null || workRecords.isEmpty()) {
-            return;
+        if (isEmpty(workRecords)) {
+            return Optional.empty();
         }
 
         List<WorkRecordPair> workRecordPairs = getAllRecordPairsByProject(workRecords);
-        if (workRecordPairs == null || workRecordPairs.isEmpty()) {
-            return;
+        if (isEmpty(workRecordPairs)) {
+            return Optional.empty();
         }
 
         List<WorkRecordPair> coincidingPairs = filterByCoincidingPairs(workRecordPairs);
-        if (coincidingPairs == null || coincidingPairs.isEmpty()) {
-            return;
+        if (isEmpty(coincidingPairs)) {
+            return Optional.empty();
         }
 
         List<EmployeePairWithTotalPeriodLength> totalPeriodLengths = mapToEmployeePairWithTotalPeriodLength(coincidingPairs);
+        if (isEmpty(totalPeriodLengths)) {
+            return Optional.empty();
+        }
 
-        EmployeePairWithTotalPeriodLength longestPair = getPairWithLongestPeriod(totalPeriodLengths);
-
-        output(longestPair);
+        return getPairWithLongestPeriod(totalPeriodLengths);
 
     }
 
@@ -56,7 +58,11 @@ public class EmployeeService {
 
 
 
-    public EmployeePairWithTotalPeriodLength getPairWithLongestPeriod(List<EmployeePairWithTotalPeriodLength> pairs) {
+    public Optional<EmployeePairWithTotalPeriodLength> getPairWithLongestPeriod(List<EmployeePairWithTotalPeriodLength> pairs) {
+        if (isEmpty(pairs)) {
+            return Optional.empty();
+        }
+
         EmployeePairWithTotalPeriodLength longestPair = pairs.get(0);
 
         for (int i = 1; i < pairs.size(); i++) {
@@ -66,10 +72,14 @@ public class EmployeeService {
             }
         }
 
-        return longestPair;
+        return Optional.of(longestPair);
     }
 
     public List<WorkRecordPair> filterByCoincidingPairs(List<WorkRecordPair> pairs) {
+        if (isEmpty(pairs)) {
+            return Collections.emptyList();
+        }
+
         List<WorkRecordPair> coincidingPairs = new ArrayList<>();
 
         for (WorkRecordPair pair : pairs) {
@@ -116,11 +126,20 @@ public class EmployeeService {
     }
 
     public boolean haveCoincidingPeriods(WorkRecord rec1, WorkRecord rec2) {
+        if (null == rec1 || null == rec2
+                || null == rec1.getPeriod() || null == rec1.getPeriod().getDateFrom()
+                || null == rec2.getPeriod() || null == rec2.getPeriod().getDateTo()) {
+            return false;
+        }
         return rec2.getPeriod().getDateFrom().compareTo(rec1.getPeriod().getDateTo()) < 0;
     }
 
 
     public List<WorkRecordPair> getAllRecordPairsByProject(List<WorkRecord> employees) {
+        if (isEmpty(employees)) {
+            return Collections.emptyList();
+        }
+
         List<WorkRecordPair> pairs = new ArrayList<>();
 
         for (int i = 0; i < employees.size() - 1; i++) {

@@ -16,6 +16,10 @@ public class Utils {
 
 
     public static void output(EmployeePairWithTotalPeriodLength pair) {
+        if (null == pair) {
+            return;
+        }
+
         System.out.println(pair.getEmployeePair().getEmployee1().getEmpId()
                 + ", " + pair.getEmployeePair().getEmployee2().getEmpId()
                 + ", " + pair.getTotalPeriodLength());
@@ -23,7 +27,7 @@ public class Utils {
 
     public static LocalDate parseNullDate(String date) {
 
-        if (date == null || date.equals("NULL")) {
+        if (null == date || date.equals("NULL")) {
             return LocalDate.now();
         } else {
             return LocalDate.parse(date);
@@ -31,10 +35,17 @@ public class Utils {
     }
 
     private static FileInputStream getFileStream(URL file) throws FileNotFoundException, URISyntaxException {
+        if (null == file) {
+            throw new IllegalArgumentException();
+        }
+
         return new FileInputStream(new File(file.toURI()));
     }
 
     public static List<List<String>> getRecordsFromFile(URL file) throws IOException, URISyntaxException {
+        if (null == file) {
+            throw new IllegalArgumentException();
+        }
 
         List<List<String>> records = new ArrayList<>();
 
@@ -50,6 +61,10 @@ public class Utils {
         }
 
         return records;
+    }
+
+    public static boolean isEmpty(List<?> pairs) {
+        return null == pairs || pairs.isEmpty();
     }
 
 }
