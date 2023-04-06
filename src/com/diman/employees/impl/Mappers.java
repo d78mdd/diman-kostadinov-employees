@@ -74,6 +74,10 @@ public class Mappers {
         if (Integer.parseInt(record.get(0)) < 0 || Integer.parseInt(record.get(1)) < 0) {
             throw new InvalidCsvException("negative ID : " + record);
         }
+
+        if (LocalDate.parse(record.get(2)).compareTo(Utils.parseNullDate(record.get(3))) > 0) {
+            throw new InvalidCsvException("start date is after end date");
+        }
     }
 
     public static List<EmployeePairWithTotalPeriodLength> mapToEmployeePairWithTotalPeriodLength(List<WorkRecordPair> coincidingPairs) {
