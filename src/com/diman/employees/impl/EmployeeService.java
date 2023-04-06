@@ -26,7 +26,7 @@ public class EmployeeService {
     public static final ChronoUnit TIME_UNIT = DAYS;
 
 
-    public Optional<EmployeePairWithTotalPeriodLength> getLongestEmployeeRecord(URL resource) throws IOException, URISyntaxException {
+    public Optional<EmployeePairWithTotalPeriodLength> getLongestEmployeeRecord(URL resource) throws IOException, URISyntaxException, InvalidCsvException {
 
         List<List<String>> recordsFromFile = getRecordsFromFile(resource);
 

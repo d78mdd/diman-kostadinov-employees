@@ -3,6 +3,7 @@ package com.diman.employees.impl;
 import com.diman.employees.beans.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,24 +14,29 @@ import static com.diman.employees.impl.Utils.isEmpty;
 
 public class Mappers {
 
-    public static List<WorkRecord> mapRecordsToBeans(List<List<String>> records) {
+    public static final int EXPECTED_RECORD_LENGTH = 4;
+
+    public static List<WorkRecord> mapRecordsToBeans(List<List<String>> records) throws InvalidCsvException {
         if (isEmpty(records)) {
             return Collections.emptyList();
         }
 
         List<WorkRecord> workRecords = new ArrayList<>();
 
-        for (List<String> record : records) {
-            workRecords.add(mapRecordToBean(record).orElseThrow(IllegalArgumentException::new));
+        for (int i = 0; i < records.size(); i++) {
+            List<String> record = records.get(i);
+            int finalI = i;
+            workRecords.add(mapRecordToBean(record).orElseThrow(() -> new InvalidCsvException("invalid record : " + record + " at index " + finalI)));
         }
 
         return workRecords;
     }
 
-    public static Optional<WorkRecord> mapRecordToBean(List<String> record) {
+    public static Optional<WorkRecord> mapRecordToBean(List<String> record) throws InvalidCsvException {
         if (isEmpty(record)) {
             return Optional.empty();
         }
+        assertValidRecord(record);
 
         WorkRecord workRecord = new WorkRecord();
 
@@ -41,6 +47,33 @@ public class Mappers {
                 Utils.parseNullDate(record.get(3))));
 
         return Optional.of(workRecord);
+    }
+
+    private static void assertValidRecord(List<String> record) throws InvalidCsvException {
+        if (null == record) {
+            return;
+        }
+
+        if (record.size() != EXPECTED_RECORD_LENGTH) {
+            throw new InvalidCsvException("unexpected record length : " + record.size() + " ( " + record + " ) ");
+        }
+
+        try {
+            Integer.parseInt(record.get(0));
+            Integer.parseInt(record.get(1));
+            LocalDate.parse(record.get(2));
+            Utils.parseNullDate(record.get(3));
+        } catch (NumberFormatException ex) {
+            throw new InvalidCsvException("invalid value for person id or company id in record : " + record);
+        } catch (DateTimeParseException ex) {
+            throw new InvalidCsvException("invalid start/end date value in record : " + record);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new InvalidCsvException("incomplete record / invalid end date in : " + record);
+        }
+
+        if (Integer.parseInt(record.get(0)) < 0 || Integer.parseInt(record.get(1)) < 0) {
+            throw new InvalidCsvException("negative ID : " + record);
+        }
     }
 
     public static List<EmployeePairWithTotalPeriodLength> mapToEmployeePairWithTotalPeriodLength(List<WorkRecordPair> coincidingPairs) {
